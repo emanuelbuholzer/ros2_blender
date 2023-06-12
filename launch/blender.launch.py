@@ -1,7 +1,6 @@
 import launch
 import launch.actions as actions
 import launch.substitutions as substitutions
-from launch import conditions
 
 
 def generate_launch_description():
@@ -17,14 +16,9 @@ def generate_launch_description():
     )
     declared_arguments.append(blend_file_arg)
 
-    no_blend_file_cond = conditions.UnlessCondition(
-        substitutions.PythonExpression(["'true' if '", blend_file, "' != 'false' else 'false'"])
-    )
-
-    blend_file_cond = conditions.UnlessCondition(
-        substitutions.NotSubstitution(
-            substitutions.PythonExpression(["'true' if '", blend_file, "' != '' else 'false'"])
-        )
+    domain_id = substitutions.EnvironmentVariable(
+        name="ROS_DOMAIN_ID",
+        default_value="0"
     )
 
     # skip_user_prefs = PythonExpression([  # noqa: F841
@@ -41,18 +35,20 @@ def generate_launch_description():
     # declared_arguments.append(skip_user_prefs_arg)
 
     exec_blender_file_action = actions.ExecuteProcess(
-        cmd=["blender", blend_file],
+        cmd=[
+            "blender",
+            "--python-expr", "\"import ros2_blender; ros2_blender.bootstrap()\"",
+            blend_file,
+        ],
+        additional_env={
+            "ROS_DOMAIN_ID": domain_id
+        },
         name=["Blender"],
-        condition=blend_file_cond
-    )
-
-    exec_blender_action = actions.ExecuteProcess(
-        cmd=["blender"],
-        name=["Blender"],
-        condition=no_blend_file_cond
+        log_cmd=True,
+        output="both",
+        shell=True,
     )
 
     return launch.LaunchDescription(declared_arguments + [
         exec_blender_file_action,
-        exec_blender_action
     ])
