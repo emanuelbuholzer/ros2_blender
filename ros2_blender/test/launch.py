@@ -5,6 +5,8 @@ import signal
 import subprocess
 import sys
 
+import _pytest
+import _pytest.config
 import pytest
 
 from ros2_blender import installation
@@ -16,7 +18,8 @@ def pytest_addoption(parser):
 
 
 @pytest.hookimpl(tryfirst=True)
-def pytest_configure(config):
+def pytest_configure(config: _pytest.config.Config):
+
     config.addinivalue_line(
         "markers", "blender: configure the ros2_blender pytest runner"
     )

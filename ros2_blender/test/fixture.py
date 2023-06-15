@@ -3,11 +3,11 @@ from pathlib import Path
 import pytest
 from _pytest.fixtures import FixtureRequest
 
-from ros2_blender.test.addon import find_addon_in_path
-
 
 @pytest.fixture
 def blender(request: FixtureRequest):
+    from ros2_blender.test.addon import find_addon_in_path
+
     addon_paths = []
     marker = request.node.get_closest_marker("blender")
     if marker is not None:
