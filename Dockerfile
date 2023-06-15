@@ -18,8 +18,6 @@ COPY setup.cfg src/ros2_blender/setup.cfg
 COPY setup.py src/ros2_blender/setup.py
 COPY pytest.ini src/ros2_blender/pytest.ini
 
-RUN ls -lah src/ros2_blender
-
 RUN apt-get update && \
     rosdep install -iy --from-paths src && \
     rm -rf /var/lib/apt/lists/
