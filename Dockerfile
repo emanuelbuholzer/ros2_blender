@@ -16,7 +16,6 @@ COPY test src/ros2_blender/test
 COPY package.xml src/ros2_blender/package.xml
 COPY setup.cfg src/ros2_blender/setup.cfg
 COPY setup.py src/ros2_blender/setup.py
-COPY pytest.ini src/ros2_blender/pytest.ini
 
 RUN apt-get update && \
     rosdep install -iy --from-paths src && \
@@ -26,7 +25,7 @@ RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
     colcon build --symlink-install
 
 RUN . /opt/ros/${ROS_DISTRO}/setup.sh && \
-    colcon test --event-handlers console_direct+ ; \
+    colcon test --python-testing setuppy_test --event-handlers console_direct+ ; \
     colcon test-result --verbose
 
 RUN sed --in-place --expression \

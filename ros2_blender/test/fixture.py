@@ -1,34 +1,39 @@
 from pathlib import Path
 
 import pytest
-from _pytest.fixtures import FixtureRequest
+
+
+class BlenderFixture:
+    def __init__(self):
+        self.addons = []
+
+    def install_addon(self, addon_path: str | Path):
+        from ros2_blender.test.addon import find_addon_in_path
+
+        path: Path
+        if isinstance(addon_path, str):
+            path = Path(addon_path)
+        elif isinstance(addon_path, Path):
+            path = addon_path
+        else:
+            raise TypeError(
+                "received unknown type for addon within addons argument from blender marker"
+            )
+
+        addon = find_addon_in_path(path)
+        self.addons.append(addon)
+
+        addon.install()
+
+    def uninstall_addons(self):
+        for addon in self.addons:
+            addon.uninstall()
 
 
 @pytest.fixture
-def blender(request: FixtureRequest):
-    from ros2_blender.test.addon import find_addon_in_path
+def blender():
+    blender_fixture = BlenderFixture()
 
-    addon_paths = []
-    marker = request.node.get_closest_marker("blender")
-    if marker is not None:
-        addon_paths_arg = marker.kwargs.get("addons")
-        if not isinstance(addon_paths_arg, list):
-            raise TypeError(
-                "received unknown type for addons argument from blender marker"
-            )
-        for addon_path in addon_paths_arg:
-            if not isinstance(addon_path, str) and not isinstance(addon_path, Path):
-                raise TypeError(
-                    "received unknown type for addon within addons argument from blender marker"
-                )
-            addon_paths.append(Path(addon_path))
+    yield blender_fixture
 
-    addons = [find_addon_in_path(addon_path) for addon_path in addon_paths]
-
-    for addon in addons:
-        addon.install()
-
-    yield "WIP"
-
-    for addon in addons:
-        addon.uninstall()
+    blender_fixture.uninstall_addons()

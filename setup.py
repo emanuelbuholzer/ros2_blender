@@ -1,9 +1,17 @@
 import os
 from glob import glob
 
+import unittest
 from setuptools import setup
 
 package_name = "ros2_blender"
+
+
+def test_suite():
+    test_loader = unittest.TestLoader()
+    test_suite = test_loader.discover('test', pattern='test_*.py')
+    return test_suite
+
 
 setup(
     name=package_name,
@@ -23,7 +31,7 @@ setup(
     maintainer_email="emanuel0xb@gmail.com",
     description="TODO: Package description",
     license="TODO: License declaration",
-    tests_require=["pytest"],
+    test_suite="test",
     entry_points={
         "console_scripts": [],
         "pytest11": [
