@@ -15,9 +15,7 @@ class Addon:
 
     def install(self):
         bpy.ops.preferences.addon_install(filepath=str(self.path))
-        addon_utils.enable(
-            self.name, default_set=True, persistent=True
-        )
+        addon_utils.enable(self.name, default_set=True, persistent=True)
 
     def uninstall(self):
         addon_utils.disable(module_name=self.name, default_set=False)

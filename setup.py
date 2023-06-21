@@ -9,7 +9,7 @@ package_name = "ros2_blender"
 
 def test_suite():
     test_loader = unittest.TestLoader()
-    test_suite = test_loader.discover('test', pattern='test_*.py')
+    test_suite = test_loader.discover("test", pattern="test_*.py")
     return test_suite
 
 
@@ -22,7 +22,11 @@ setup(
         ("share/" + package_name, ["package.xml"]),
         (
             os.path.join("share", package_name, "launch"),
-            glob(os.path.join("launch", "*launch.[pxy][yma]*")),
+            glob(os.path.join("launch", "*.[pxy][yma]*")),
+        ),
+        (
+            os.path.join("share", package_name, "launch"),
+            glob(os.path.join("launch", "*.blend")),
         ),
     ],
     install_requires=["setuptools"],

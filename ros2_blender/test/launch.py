@@ -19,7 +19,6 @@ def pytest_addoption(parser):
 
 @pytest.hookimpl(tryfirst=True)
 def pytest_configure(config: _pytest.config.Config):
-
     config.addinivalue_line(
         "markers", "blender: configure the ros2_blender pytest runner"
     )
