@@ -1,5 +1,5 @@
 import pytest
-import ros2_blender
+from ros2_blender import bootstrap
 
 
 if __name__ == "__main__":
@@ -9,7 +9,7 @@ if __name__ == "__main__":
     ]
 
     def run_pytest():
-        ros2_blender.bootstrap(0, "", "false")
+        bootstrap(0, "", "false")
         pytest.main(argv, plugins=[])
 
     run_pytest()
