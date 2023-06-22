@@ -3,7 +3,30 @@ import rclpy
 import rclpy.logging
 
 
-def bootstrap(domain_id, addons_str: str, read_prefs: str):
+# Compatibility to work with ros2 launch
+def bootstrap_launch_compat(domain_id: int, addons_str: str, read_prefs_str: str):
+    addons = []
+    if addons_str != "":
+        import addon_utils
+
+        available_addons = [
+            mod.bl_info.get("name", "") for mod in addon_utils.modules()
+        ]
+
+        addon_names = addons_str.split(",")
+        for addon_name in addon_names:
+            assert addon_name in available_addons
+            addons.append(addon_name)
+
+    read_prefs = read_prefs_str == "true"
+
+    bootstrap(domain_id, addons, read_prefs)
+
+
+def bootstrap(domain_id: int = 0, addons: [str] = [], read_prefs: bool = False):
+    import addon_utils
+    import bpy
+
     rclpy.init(domain_id=domain_id)
     if not rclpy.ok():
         raise RuntimeError("Could not initialize rclpy context")
@@ -16,20 +39,14 @@ def bootstrap(domain_id, addons_str: str, read_prefs: str):
 
     atexit.register(atexit_shutdown)
 
-    if addons_str != "":
-        import addon_utils
+    for addon in addons:
+        logger.info(f"enabling addon {addon}")
+        addon_utils.enable(addon, default_set=True, persistent=True)
 
-        addon_names = [mod.bl_info.get("name", "") for mod in addon_utils.modules()]
-
-        addons = addons_str.split(",")
-        logger.info(str(addons))
-        for addon in addons:
-            assert addon in addon_names
-
-            logger.info(f"Enabling addon {addon}")
-            addon_utils.enable(addon, default_set=True, persistent=True)
-
-    if read_prefs == "true":
-        import bpy
+    if read_prefs:
         logger.info("Reading user preferences")
         bpy.ops.wm.read_userpref()
+
+
+def teardown():
+    rclpy.try_shutdown()

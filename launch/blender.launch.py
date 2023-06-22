@@ -84,12 +84,12 @@ def generate_launch_description():
             PythonExpression(
                 [  # fmt: off
                     "'\"",
-                    "import ros2_blender; ros2_blender.bootstrap(",
+                    "import ros2_blender; ros2_blender.bootstrap_launch_compat(",
                     domain_id,
-                    ", \\'",
+                    ", addons_str=\\'",
                     addons,
                     "\\'",
-                    ", read_prefs=\\'",
+                    ", read_prefs_str=\\'",
                     read_prefs,
                     "\\'" ")" "\"'",
                 ]  # fmt: on

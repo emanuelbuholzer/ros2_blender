@@ -29,6 +29,16 @@ class BlenderFixture:
         for addon in self.addons:
             addon.uninstall()
 
+    def bootstrap(self, domain_id: int = 0, read_prefs=False):
+        from ros2_blender import bootstrap
+
+        bootstrap()
+
+    def teardown(self):
+        from ros2_blender import teardown
+
+        teardown()
+
 
 @pytest.fixture
 def blender():
