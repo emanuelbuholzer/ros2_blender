@@ -23,9 +23,17 @@ def bootstrap_launch_compat(domain_id: int, addons_str: str, read_prefs_str: str
     bootstrap(domain_id, addons, read_prefs)
 
 
-def bootstrap(domain_id: int = 0, addons: [str] = [], read_prefs: bool = False):
+def bootstrap(
+    domain_id: int = 0,
+    addons: [str] = [],
+    read_prefs: bool = False,
+    use_factory_settings: bool = True,
+):
     import addon_utils
     import bpy
+
+    if use_factory_settings:
+        bpy.ops.wm.read_factory_settings()
 
     rclpy.init(domain_id=domain_id)
     if not rclpy.ok():
