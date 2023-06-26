@@ -79,6 +79,7 @@ def generate_launch_description():
     exec_blender_file_action = ExecuteProcess(
         cmd=[
             blender_executable,
+            "--factory-startup",
             "--python-expr",
             PythonExpression(
                 [  # fmt: off
