@@ -15,9 +15,15 @@ addon_paths = [Path(addon_path) for addon_path in m_addon_paths.split(",")]
 addons_directory: Path = installation.find_addons_directory(blender_executable)
 
 for addon_path in addon_paths:
-    if addons_directory.joinpath(addon_path.name).is_symlink():
-        print("OUuuu noed gued")
+    resolved_addon_path = addon_path.resolve()
+    if not resolved_addon_path.is_dir():
+        egg_link_path = resolved_addon_path.parent.joinpath(
+            resolved_addon_path.name.replace("_", "-") + ".egg-link"
+        )
+        if egg_link_path.is_file():
+            base_dir = Path(egg_link_path.read_text().replace("\n.", ""))
+            resolved_addon_path = base_dir.joinpath(resolved_addon_path.name)
 
     addons_directory.joinpath(addon_path.name).symlink_to(
-        addon_path.resolve(), target_is_directory=True
+        resolved_addon_path, target_is_directory=True
     )
