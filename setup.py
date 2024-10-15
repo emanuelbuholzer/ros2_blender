@@ -1,16 +1,9 @@
 import os
 from glob import glob
 
-import unittest
 from setuptools import setup
 
 package_name = "ros2_blender"
-
-
-def test_suite():
-    test_loader = unittest.TestLoader()
-    test_suite = test_loader.discover("test", pattern="test_*.py")
-    return test_suite
 
 
 setup(
@@ -31,7 +24,7 @@ setup(
     ],
     install_requires=["setuptools"],
     zip_safe=True,
-    maintainer="oxb",
+    maintainer="Emanuel Buholzer",
     maintainer_email="emanuel0xb@gmail.com",
     description="TODO: Package description",
     license="TODO: License declaration",
