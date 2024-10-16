@@ -21,6 +21,14 @@ setup(
             os.path.join("share", package_name, "launch"),
             glob(os.path.join("launch", "*.blend")),
         ),
+        (
+            os.path.join("share", package_name, "test"),
+            glob(os.path.join("test", "*launch.[pxy][yma]*")),
+        ),
+        (
+            os.path.join("share", package_name, "test", "addon_minimal"),
+            glob(os.path.join("test", "addon_minimal", "*.[pxy][yma]*")),
+        ),
     ],
     install_requires=["setuptools"],
     zip_safe=True,
@@ -28,7 +36,7 @@ setup(
     maintainer_email="emanuel0xb@gmail.com",
     description="TODO: Package description",
     license="TODO: License declaration",
-    test_suite="test",
+    tests_require=["pytest"],
     entry_points={
         "console_scripts": [],
         "pytest11": [
